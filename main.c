@@ -44,9 +44,10 @@ void c5_p2()
 {
     char buf[10];
     int i = 0;
+    int x;
     while (i < 20)
     {
-        buf[i] = i;
+        buf[i] = x;
         i = i + 1;
     }
 }
