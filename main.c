@@ -12,22 +12,28 @@ void c3_p6()
     }
 }
 
-void c4_p4() {
+void c4_p4()
+{
     int x = 10;
     int y = 1;
     int z;
-    if (x < y) {
+    if (x < y)
+    {
         z = x;
-    } else {
+    }
+    else
+    {
         z = y;
     }
     printf("%d\n", z);
 }
 
-void c4_p14() {
+void c4_p14()
+{
     int sum = 0;
     int i = 1;
-    while (i < 11) {
+    while (i < 11)
+    {
         sum += i;
         i++;
     }
@@ -68,11 +74,14 @@ void c5_p15()
         *p = 42;
 }
 
-void c6_p2() {
+void c6_p2()
+{
     int A[4][8] = {8};
     int sum = 0;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 8; ++j)
+        {
             sum += A[i][j];
         }
     }
