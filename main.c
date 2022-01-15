@@ -34,17 +34,6 @@ void c4_p14() {
     printf("%d\n%d\n", sum, i);
 }
 
-void c6_p2() {
-    int A[4][8] = {8};
-    int sum = 0;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            sum += A[i][j];
-        }
-    }
-    printf("%d\n", sum);
-}
-
 void c5_p2()
 {
     char buf[10];
@@ -77,6 +66,17 @@ void c5_p15()
         p = &a;
     if (p)
         *p = 42;
+}
+
+void c6_p2() {
+    int A[4][8] = {8};
+    int sum = 0;
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            sum += A[i][j];
+        }
+    }
+    printf("%d\n", sum);
 }
 
 int main()
