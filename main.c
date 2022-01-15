@@ -1,7 +1,12 @@
-void c3_p6() {
+#include <stdlib.h>
+#include <stdio.h>
+
+void c3_p6()
+{
     int x = 10;
     int y = 1;
-    while (0 < x) {
+    while (0 < x)
+    {
         y *= x;
         x -= 1;
     }
@@ -40,7 +45,42 @@ void c6_p2() {
     printf("%d\n", sum);
 }
 
-int main() {
+void c5_p2()
+{
+    char buf[10];
+    int i = 0;
+    while (i < 20)
+    {
+        buf[i] = i;
+        i = i + 1;
+    }
+}
+
+void c5_p3()
+{
+    char *strings[] = {"One", "Two", "Three"};
+    char *s = NULL;
+    int i;
+    for (i = 0; i < 3; i++)
+    {
+        s = strings[i];
+        printf("%s\n", s);
+    }
+    printf("%d\n", i);
+}
+
+void c5_p15()
+{
+    int a, b, *p;
+    p = NULL;
+    if (rand())
+        p = &a;
+    if (p)
+        *p = 42;
+}
+
+int main()
+{
     c3_p6();
 
     return 0;
