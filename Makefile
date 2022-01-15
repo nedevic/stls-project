@@ -1,3 +1,5 @@
+.PHONY: bin
+
 clean:
 	rm -rf ./bin
 
