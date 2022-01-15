@@ -1,1 +1,1 @@
-scan-build -k -o ./bin/results/ make
+scan-build -k -o ./bin/results/ make bin

@@ -1,5 +1,6 @@
 clean:
 	rm -rf ./bin
 
-all:
+bin:
+	mkdir ./bin
 	cc ./main.c -o ./bin/a.out
