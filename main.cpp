@@ -10,8 +10,12 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <strings.h>
+#include <pwd.h>
+#include <stdarg.h>
 
 using namespace std;
+
+#define apple 0
 
 #ifndef _Nonnull
 #define _Nonnull
@@ -316,16 +320,13 @@ void security_insecureAPI_bzero()
     bzero(x, 3);
 }
 
-void security_insecureAPI_getpw()
-{
-    // Linux only
-}
-
+#if apple == 1
 void security_insecureAPI_gets()
 {
     char s[10];
     gets(s);
 }
+#endif
 
 void security_insecureAPI_mkstemp()
 {
@@ -359,6 +360,47 @@ void security_insecureAPI_vfork()
         execl("/bin/ls", "/bin/ls");
         _exit(1);
     }
+}
+
+#if apple == 0
+void security_insecureAPI_getpw(uid_t uid, char *buf)
+{
+    getpw(uid, buf);
+}
+#endif
+
+class optin_cplusplus_UninitializedObject { // not working
+private:
+    int x;
+    int * z;
+} optin_cplusplus_UninitializedObject_obj;
+
+class optin_cplusplus_VirtualCall {
+public:
+    virtual void dummy() {}
+    optin_cplusplus_VirtualCall() {
+        dummy();
+    }
+};
+
+struct optin_performance_Padding { // not working
+    char a;
+    int b;
+    double c;
+    char d;
+    double f;
+};
+
+void valist_CopyToSelf(int x, ...) {
+    va_list arguments;
+    va_start(arguments, x);
+    va_copy(arguments, arguments);
+    va_end(arguments);
+}
+
+void valist_Unterminated(int x, ...) {
+    va_list arguments;
+    va_start(arguments, x);
 }
 
 int main()
