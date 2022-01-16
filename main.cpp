@@ -226,7 +226,11 @@ void cplusplus_Move()
 {
     string str = "Hello, world!\n";
     vector<string> messages;
+    #ifdef APPLE
     messages.__emplace_back(move(str));
+    #else
+    messages.emplace_back(move(str));
+    #endif
     cout << str;
 }
 
