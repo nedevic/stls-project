@@ -21,4 +21,4 @@ scan-build \
 -enable-checker optin.performance.GCDAntipattern \
 -enable-checker optin.performance.Padding \
 -enable-checker optin.portability.UnixAPI \
--maxloop 800 -o ./bin/results/ g++ main.cpp -o ./bin/a.out
+-maxloop 800 -o ./bin/results/ g++ main.cpp -o ./bin/a.out -DAPPLE
