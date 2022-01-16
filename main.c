@@ -4,12 +4,18 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
+#include <strings.h>
+
+using namespace std;
 
 #ifndef _Nonnull
 #define _Nonnull
 #endif
-
-using namespace std;
 
 void c3_p6()
 {
@@ -98,145 +104,261 @@ void c6_p2()
     printf("%d\n", sum);
 }
 
-void core_CallAndMessage_helper(int x) {
+void core_CallAndMessage_helper(int x)
+{
     x++;
     printf("%d\n", x);
 }
 
-void core_CallAndMessage() {
+void core_CallAndMessage()
+{
     int x;
     core_CallAndMessage_helper(x);
     void (*foo)() = NULL;
     foo(); // not working
 }
 
-void core_DivideZero() {
+void core_DivideZero()
+{
     int x = 3;
     int y = 1;
     y--;
     printf("%d\n", x / y);
 }
 
-__attribute__((__nonnull__))
-void core_NonNullParamChecker_helper(char * x) {
+__attribute__((__nonnull__)) void core_NonNullParamChecker_helper(char *x)
+{
     printf("%s\n", x);
 }
 
-void core_NonNullParamChecker() {
+void core_NonNullParamChecker()
+{
     core_NonNullParamChecker_helper(NULL);
 }
 
-void core_NullDereference() {
-    int * x = NULL;
+void core_NullDereference()
+{
+    int *x = NULL;
     printf("%d\n", *x);
 }
 
-int * core_StackAddressEscape_helper() {
+int *core_StackAddressEscape_helper()
+{
     int x = 4;
     return &x;
 }
 
-void core_StackAddressEscape() {
+void core_StackAddressEscape()
+{
     printf("%d\n", *core_StackAddressEscape_helper());
 }
 
-void core_UndefinedBinaryOperatorResult() {
+void core_UndefinedBinaryOperatorResult()
+{
     int x = 11 << 88;
     printf("%d\n", x);
 }
 
-void core_VLASize() {
+void core_VLASize()
+{
     int n = 0;
     int v[n];
 }
 
-void core_uninitialized_ArraySubscript() {
+void core_uninitialized_ArraySubscript()
+{
     int i;
     int v[] = {1, 2, 3};
     printf("%d\n", v[i]);
 }
 
-void core_uninitialized_Assign() {
+void core_uninitialized_Assign()
+{
     int x, y;
     x = y;
     printf("%d\n", x);
 }
 
-void core_uninitialized_Branch() {
+void core_uninitialized_Branch()
+{
     int x;
-    if (x) {
+    if (x)
+    {
         x = 4;
-    } else {
+    }
+    else
+    {
         x = -3;
     }
     printf("%d\n", x);
 }
 
-void core_uninitialized_CapturedBlockVariable() {
+void core_uninitialized_CapturedBlockVariable()
+{
     int x;
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i)
+    {
         x++;
     }
     printf("%d\n", x);
 }
 
-int core_uninitialized_UndefReturn() {
+int core_uninitialized_UndefReturn()
+{
     int x;
     return x;
 }
 
-void cplusplus_InnerPointer() {
+void cplusplus_InnerPointer()
+{
     string s = "llvm";
     const char *c = s.data();
     s = "clang";
     printf("%s\n", c);
 }
 
-void cplusplus_Move() {
+// Not working
+void cplusplus_Move()
+{
     string str = "Hello, world!\n";
     vector<string> messages;
     messages.emplace_back(move(str));
-    cout << str; // not working
+    cout << str;
 }
 
-void cplusplus_NewDelete() {
-    int * x = new int;
+void cplusplus_NewDelete()
+{
+    int *x = new int;
     *x = 4;
     delete x;
     // delete x;
     printf("%d\n", x);
 }
 
-void cplusplus_NewDeleteLeaks() {
-    int * x = new int;
+void cplusplus_NewDeleteLeaks()
+{
+    int *x = new int;
     *x = 4;
 }
 
-class cplusplus_PureVirtualCall{
+class cplusplus_PureVirtualCall
+{
 public:
     virtual void dummy() = 0;
-    cplusplus_PureVirtualCall() {
+    cplusplus_PureVirtualCall()
+    {
         dummy();
     }
 };
 
-void deadcode_DeadStores() {
+void deadcode_DeadStores()
+{
     int x = 4;
     int y = x + 3;
 }
 
-void nullability_NullPassedToNonnull_helper(_Nonnull int * x) {
+void nullability_NullPassedToNonnull_helper(_Nonnull int *x)
+{
     printf("%d\n", *x);
 }
 
-void nullability_NullPassedToNonnull() {
-    int * x = NULL;
+void nullability_NullPassedToNonnull()
+{
+    int *x = NULL;
     nullability_NullPassedToNonnull_helper(x);
 }
 
-_Nonnull int * nullability_NullReturnedFromNonnull() {
-    int * x = NULL;
-    return x; // not working
+// Not working
+_Nonnull int *nullability_NullReturnedFromNonnull()
+{
+    int *x = NULL;
+    return x; 
+}
+
+void security_FloatLoopCounter()
+{
+    float i;
+    for (i = 0; i < 100; i++)
+    {
+        printf("%d\n", (int)i);
+    }
+}
+
+// Not working?
+void security_insecureAPI_DeprecatedOrUnsafeBufferHandling()
+{
+    int x = atoi("1");
+    printf("%d\n", x);
+}
+
+// Not working
+void security_insecureAPI_UncheckedReturn()
+{
+    char s[100];
+    int fd = open("/tmp/aaaaaaa.txt", O_RDWR);
+    read(fd, s, 100);
+}
+
+void security_insecureAPI_bcmp()
+{
+    bcmp("123", "abc", 3);
+}
+
+void security_insecureAPI_bcopy()
+{
+    char x[2];
+    bcopy(x, "abc", 3);
+}
+
+void security_insecureAPI_bzero()
+{
+    char x[2];
+    bzero(x, 3);
+}
+
+void security_insecureAPI_getpw()
+{
+    // Linux only
+}
+
+void security_insecureAPI_gets()
+{
+    char s[10];
+    gets(s);
+}
+
+void security_insecureAPI_mkstemp()
+{
+    mkstemp("/tmp/a.XX");
+}
+
+void security_insecureAPI_mktemp()
+{
+    mktemp("/tmp/a.XX");
+}
+
+void security_insecureAPI_rand()
+{
+    int key = rand();
+    int x = 8;
+    printf("%d\n", x ^ key);
+}
+
+void security_insecureAPI_strcpy()
+{
+    char s1[4];
+    char s2[] = "12345";
+    strcpy(s1, s2);
+}
+
+void security_insecureAPI_vfork()
+{
+    int pid;
+    if ((pid = vfork()) == 0)
+    {
+        execl("/bin/ls", "/bin/ls");
+        _exit(1);
+    }
 }
 
 int main()
