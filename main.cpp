@@ -16,8 +16,6 @@
 
 using namespace std;
 
-#define apple 0
-
 #ifndef _Nonnull
 #define _Nonnull
 #endif
@@ -321,7 +319,7 @@ void security_insecureAPI_bzero()
     bzero(x, 3);
 }
 
-#if apple == 1
+#ifdef APPLE
 void security_insecureAPI_gets()
 {
     char s[10];
@@ -365,7 +363,7 @@ void security_insecureAPI_vfork()
     }
 }
 
-#if apple == 0
+#ifndef APPLE
 void security_insecureAPI_getpw(uid_t uid, char *buf)
 {
     getpw(uid, buf);
