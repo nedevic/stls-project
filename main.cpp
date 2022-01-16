@@ -113,12 +113,13 @@ void core_CallAndMessage_helper(int x)
     printf("%d\n", x);
 }
 
+// Not working
 void core_CallAndMessage()
 {
     int x;
     core_CallAndMessage_helper(x);
     void (*foo)() = NULL;
-    foo(); // not working
+    foo();
 }
 
 void core_DivideZero()
@@ -370,21 +371,27 @@ void security_insecureAPI_getpw(uid_t uid, char *buf)
 }
 #endif
 
-class optin_cplusplus_UninitializedObject { // not working
+// Not working
+class optin_cplusplus_UninitializedObject
+{
 private:
     int x;
-    int * z;
+    int *z;
 } optin_cplusplus_UninitializedObject_obj;
 
-class optin_cplusplus_VirtualCall {
+class optin_cplusplus_VirtualCall
+{
 public:
     virtual void dummy() {}
-    optin_cplusplus_VirtualCall() {
+    optin_cplusplus_VirtualCall()
+    {
         dummy();
     }
 };
 
-struct optin_performance_Padding { // not working
+// Not working
+struct optin_performance_Padding
+{
     char a;
     int b;
     double c;
@@ -392,14 +399,16 @@ struct optin_performance_Padding { // not working
     double f;
 };
 
-void valist_CopyToSelf(int x, ...) {
+void valist_CopyToSelf(int x, ...)
+{
     va_list arguments;
     va_start(arguments, x);
     va_copy(arguments, arguments);
     va_end(arguments);
 }
 
-void valist_Unterminated(int x, ...) {
+void valist_Unterminated(int x, ...)
+{
     va_list arguments;
     va_start(arguments, x);
 }
