@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <strings.h>
 #include <pwd.h>
+#include <setjmp.h>
 #include <stdarg.h>
 
 using namespace std;
@@ -226,7 +227,7 @@ void cplusplus_Move()
 {
     string str = "Hello, world!\n";
     vector<string> messages;
-    messages.emplace_back(move(str));
+    messages.__emplace_back(move(str));
     cout << str;
 }
 
@@ -349,7 +350,9 @@ void security_insecureAPI_strcpy()
 {
     char s1[4];
     char s2[] = "12345";
-    strcpy(s1, s2);
+    char *sp1 = s1;
+    char *sp2 = s2;
+    strcpy(sp1, sp2);
 }
 
 void security_insecureAPI_vfork()
@@ -401,6 +404,70 @@ void valist_CopyToSelf(int x, ...) {
 void valist_Unterminated(int x, ...) {
     va_list arguments;
     va_start(arguments, x);
+}
+
+// Not working?
+void unix_API()
+{
+    jmp_buf jmp_buf;
+    int ret;
+    ret = setjmp(jmp_buf);
+    if (0 == ret)
+    {
+        longjmp(NULL, 1);
+    }
+}
+
+void unix_Malloc()
+{
+    char *p = (char *)malloc(8);
+    char *leak = (char *)malloc(8);
+
+    /* Double free */
+    free(p);
+    free(p);
+
+    /* Use after free */
+    leak[1] = p[1];
+}
+
+void unix_MallocSizeof()
+{
+    char *p;
+    char *sp;
+    char s[] = "0123456789";
+
+    sp = s;
+    p = (char *)malloc(sizeof(sp));
+    strcpy(p, sp);
+    free(p);
+}
+
+// Not working?
+void unix_cstring_BadSizeArg()
+{
+    char src[] = "1234";
+    char dest[10];
+    char *src_p = src;
+
+    strncpy(dest, src_p, sizeof(src_p));
+}
+
+void unix_cstring_NullArg()
+{
+    char dest[80];
+    char src[] = "123";
+    char *p = NULL;
+
+    strncpy(dest, p, 80);
+}
+
+void valist_Uninitialized(void *arg0, ...)
+{
+    va_list va;
+    int integer;
+    integer = va_arg(va, int);
+    va_end(va);
 }
 
 int main()
