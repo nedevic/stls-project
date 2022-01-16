@@ -272,7 +272,7 @@ void nullability_NullPassedToNonnull()
 _Nonnull int *nullability_NullReturnedFromNonnull()
 {
     int *x = NULL;
-    return x; 
+    return x;
 }
 
 void security_FloatLoopCounter()
@@ -307,7 +307,7 @@ void security_insecureAPI_bcmp()
 void security_insecureAPI_bcopy()
 {
     char x[2];
-    bcopy(x, "abc", 3);
+    bcopy(x, (void *)"abc", 3);
 }
 
 void security_insecureAPI_bzero()
