@@ -1,5 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <utility>
+
+#ifndef _Nonnull
+#define _Nonnull
+#endif
+
+using namespace std;
 
 void c3_p6()
 {
@@ -86,6 +96,147 @@ void c6_p2()
         }
     }
     printf("%d\n", sum);
+}
+
+void core_CallAndMessage_helper(int x) {
+    x++;
+    printf("%d\n", x);
+}
+
+void core_CallAndMessage() {
+    int x;
+    core_CallAndMessage_helper(x);
+    void (*foo)() = NULL;
+    foo(); // not working
+}
+
+void core_DivideZero() {
+    int x = 3;
+    int y = 1;
+    y--;
+    printf("%d\n", x / y);
+}
+
+__attribute__((__nonnull__))
+void core_NonNullParamChecker_helper(char * x) {
+    printf("%s\n", x);
+}
+
+void core_NonNullParamChecker() {
+    core_NonNullParamChecker_helper(NULL);
+}
+
+void core_NullDereference() {
+    int * x = NULL;
+    printf("%d\n", *x);
+}
+
+int * core_StackAddressEscape_helper() {
+    int x = 4;
+    return &x;
+}
+
+void core_StackAddressEscape() {
+    printf("%d\n", *core_StackAddressEscape_helper());
+}
+
+void core_UndefinedBinaryOperatorResult() {
+    int x = 11 << 88;
+    printf("%d\n", x);
+}
+
+void core_VLASize() {
+    int n = 0;
+    int v[n];
+}
+
+void core_uninitialized_ArraySubscript() {
+    int i;
+    int v[] = {1, 2, 3};
+    printf("%d\n", v[i]);
+}
+
+void core_uninitialized_Assign() {
+    int x, y;
+    x = y;
+    printf("%d\n", x);
+}
+
+void core_uninitialized_Branch() {
+    int x;
+    if (x) {
+        x = 4;
+    } else {
+        x = -3;
+    }
+    printf("%d\n", x);
+}
+
+void core_uninitialized_CapturedBlockVariable() {
+    int x;
+    for (int i = 0; i < 3; ++i) {
+        x++;
+    }
+    printf("%d\n", x);
+}
+
+int core_uninitialized_UndefReturn() {
+    int x;
+    return x;
+}
+
+void cplusplus_InnerPointer() {
+    string s = "llvm";
+    const char *c = s.data();
+    s = "clang";
+    printf("%s\n", c);
+}
+
+void cplusplus_Move() {
+    string str = "Hello, world!\n";
+    vector<string> messages;
+    messages.emplace_back(move(str));
+    cout << str; // not working
+}
+
+void cplusplus_NewDelete() {
+    int * x = new int;
+    *x = 4;
+    delete x;
+    // delete x;
+    printf("%d\n", x);
+}
+
+void cplusplus_NewDeleteLeaks() {
+    int * x = new int;
+    *x = 4;
+}
+
+class cplusplus_PureVirtualCall{
+public:
+    virtual void dummy() = 0;
+    cplusplus_PureVirtualCall() {
+        dummy();
+    }
+};
+
+void deadcode_DeadStores() {
+    int x = 4;
+    int y = x + 3;
+}
+
+void nullability_NullPassedToNonnull_helper(_Nonnull int * x) {
+    printf("%d\n", *x);
+}
+
+void nullability_NullPassedToNonnull() {
+    int * x = NULL;
+    nullability_NullPassedToNonnull_helper(x);
+}
+
+_Nonnull int * nullability_NullReturnedFromNonnull() {
+    int * x = NULL;
+    return x; // not working
 }
 
 int main()
